@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B5B5A8327F6274C00E3EF11 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B5A8227F6274C00E3EF11 /* UIButton+.swift */; };
 		6B82115727F5FE02001F199A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82115627F5FE02001F199A /* AppDelegate.swift */; };
 		6B82115927F5FE02001F199A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82115827F5FE02001F199A /* SceneDelegate.swift */; };
 		6B82115B27F5FE02001F199A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82115A27F5FE02001F199A /* MainViewController.swift */; };
@@ -15,9 +16,11 @@
 		6B82116B27F6015D001F199A /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82116A27F6015D001F199A /* TabBarController.swift */; };
 		6B82116D27F60190001F199A /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82116C27F60190001F199A /* TabBar.swift */; };
 		6B82117027F6072B001F199A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6B82116F27F6072B001F199A /* SnapKit */; };
+		6B82117527F61705001F199A /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82117427F61705001F199A /* FeedTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B5B5A8227F6274C00E3EF11 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
 		6B82115327F5FE02001F199A /* InstagramClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstagramClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B82115627F5FE02001F199A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6B82115827F5FE02001F199A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -27,6 +30,7 @@
 		6B82116427F5FE04001F199A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B82116A27F6015D001F199A /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		6B82116C27F60190001F199A /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
+		6B82117427F61705001F199A /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +45,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B5B5A8427F6276400E3EF11 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6B5B5A8227F6274C00E3EF11 /* UIButton+.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		6B82114A27F5FE02001F199A = {
 			isa = PBXGroup;
 			children = (
@@ -62,6 +74,7 @@
 			children = (
 				6B82115627F5FE02001F199A /* AppDelegate.swift */,
 				6B82115827F5FE02001F199A /* SceneDelegate.swift */,
+				6B5B5A8427F6276400E3EF11 /* Extension */,
 				6B82117127F60748001F199A /* Presentation */,
 				6B82115F27F5FE04001F199A /* Assets.xcassets */,
 				6B82116127F5FE04001F199A /* LaunchScreen.storyboard */,
@@ -92,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				6B82115A27F5FE02001F199A /* MainViewController.swift */,
+				6B82117427F61705001F199A /* FeedTableViewCell.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -173,8 +187,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B82116B27F6015D001F199A /* TabBarController.swift in Sources */,
+				6B5B5A8327F6274C00E3EF11 /* UIButton+.swift in Sources */,
 				6B82115B27F5FE02001F199A /* MainViewController.swift in Sources */,
 				6B82115727F5FE02001F199A /* AppDelegate.swift in Sources */,
+				6B82117527F61705001F199A /* FeedTableViewCell.swift in Sources */,
 				6B82115927F5FE02001F199A /* SceneDelegate.swift in Sources */,
 				6B82116D27F60190001F199A /* TabBar.swift in Sources */,
 			);
