@@ -9,7 +9,7 @@ import UIKit
 
 enum TabBar: CaseIterable {
     case main
-    case search
+    case explore
     case reels
     case shop
     case account
@@ -18,8 +18,8 @@ enum TabBar: CaseIterable {
         switch self {
         case .main:
             return UINavigationController(rootViewController: MainViewController())
-        case .search:
-            return UIViewController()
+        case .explore:
+            return UINavigationController(rootViewController: ExploreViewController())
         case .reels:
             return UIViewController()
         case .shop:
@@ -33,7 +33,7 @@ enum TabBar: CaseIterable {
         switch self {
         case .main:
             return UITabBarItem(title: nil, image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
-        case .search:
+        case .explore:
             return UITabBarItem(title: nil, image: UIImage(systemName: "magnifyingglass"), selectedImage: nil)
         case .reels:
             return UITabBarItem(title: nil, image: UIImage(systemName: "play.square"), selectedImage: UIImage(systemName: "play.square.fill"))
