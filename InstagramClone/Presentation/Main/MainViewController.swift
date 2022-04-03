@@ -26,15 +26,29 @@ extension MainViewController: UITableViewDataSource {
         return 10
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: FeedTableViewCell.identifier,
-            for: indexPath
-        ) as? FeedTableViewCell else { return UITableViewCell() }
+        switch indexPath.row {
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: StoryTableViewCell.identifier,
+                for: indexPath
+            ) as? StoryTableViewCell else { return UITableViewCell() }
+            
+            cell.setupView()
+            cell.selectionStyle = .none
+            
+            return cell
+        default:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: FeedTableViewCell.identifier,
+                for: indexPath
+            ) as? FeedTableViewCell else { return UITableViewCell() }
+            
+            cell.setupView()
+            cell.selectionStyle = .none
+            
+            return cell
+        }
         
-        cell.setupView()
-        cell.selectionStyle = .none
-        
-        return cell
     }
 }
 
@@ -46,12 +60,17 @@ private extension MainViewController {
     func attribute() {
         view.backgroundColor = .systemBackground
         
+        feedTableView.showsVerticalScrollIndicator = false
         feedTableView.rowHeight = UITableView.automaticDimension
         feedTableView.separatorStyle = .none
         feedTableView.dataSource = self
         feedTableView.register(
             FeedTableViewCell.self,
             forCellReuseIdentifier: FeedTableViewCell.identifier
+        )
+        feedTableView.register(
+            StoryTableViewCell.self,
+            forCellReuseIdentifier: StoryTableViewCell.identifier
         )
         
     }

@@ -44,12 +44,12 @@ private extension FeedTableViewCell {
         descriptionLabel.text = "20._.chan 그들의 얼마나 있으며, 같이, 것이다. 인간이 이성은 인류의 두기 끝에 유소년에게서 있으랴? 뛰노는 기관과 생생하며, 사막이다. 바이며, 보내는 우리의 품었기 피부가 칼이다. 그것을 청춘은 가는 남는 스며들어 않는 곧 이것이다."
         dateLabel.text = "3월 24일"
         
-        userImageView.backgroundColor = .systemGray
+        userImageView.backgroundColor = .secondarySystemBackground
         userImageView.layer.cornerRadius = 22.0
         userNameAndLocationStackView.axis = .vertical
         userNameAndLocationStackView.spacing = 2.0
-        userNameLabel.font = .systemFont(ofSize: 16.0, weight: .medium)
-        locationLabel.font = .systemFont(ofSize: 14.0, weight: .regular)
+        userNameLabel.font = .systemFont(ofSize: 14.0, weight: .medium)
+        locationLabel.font = .systemFont(ofSize: 12.0, weight: .regular)
         meatBallMenuButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
         
         feedImageView.backgroundColor = .secondarySystemBackground
