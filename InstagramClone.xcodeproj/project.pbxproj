@@ -20,6 +20,7 @@
 		6B82117027F6072B001F199A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6B82116F27F6072B001F199A /* SnapKit */; };
 		6B82117527F61705001F199A /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82117427F61705001F199A /* FeedTableViewCell.swift */; };
 		6BE0CFEA27F9F13300051447 /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0CFE927F9F13300051447 /* ExploreViewController.swift */; };
+		6BE0CFED27FAD3D700051447 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0CFEC27FAD3D700051447 /* AccountViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		6B82116C27F60190001F199A /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		6B82117427F61705001F199A /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 		6BE0CFE927F9F13300051447 /* ExploreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
+		6BE0CFEC27FAD3D700051447 /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				6B82117227F607A9001F199A /* TabBar */,
 				6B82117327F60806001F199A /* Main */,
 				6BE0CFEB27F9F13C00051447 /* Explore */,
+				6BE0CFEE27FAD3DA00051447 /* Account */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -125,6 +128,14 @@
 				6BE0CFE927F9F13300051447 /* ExploreViewController.swift */,
 			);
 			path = Explore;
+			sourceTree = "<group>";
+		};
+		6BE0CFEE27FAD3DA00051447 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				6BE0CFEC27FAD3D700051447 /* AccountViewController.swift */,
+			);
+			path = Account;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -213,6 +224,7 @@
 				6B82115927F5FE02001F199A /* SceneDelegate.swift in Sources */,
 				6B82116D27F60190001F199A /* TabBar.swift in Sources */,
 				6B5B5A8C27F838FB00E3EF11 /* StoryTableViewCell.swift in Sources */,
+				6BE0CFED27FAD3D700051447 /* AccountViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

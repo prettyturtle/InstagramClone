@@ -25,7 +25,7 @@ enum TabBar: CaseIterable {
         case .shop:
             return UIViewController()
         case .account:
-            return UIViewController()
+            return UINavigationController(rootViewController: AccountViewController())
         }
     }
     
