@@ -48,14 +48,47 @@ extension MainViewController: UITableViewDataSource {
             
             return cell
         }
-        
     }
 }
-
+extension MainViewController {
+    @objc func didTapPlusBarButton() {
+        let alertController = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        let feedAction = UIAlertAction(
+            title: "게시물",
+            style: .default
+        )
+        let storyAction = UIAlertAction(
+            title: "스토리",
+            style: .default
+        )
+        let cancelAction = UIAlertAction(
+            title: "취소",
+            style: .cancel
+        )
+        [
+            feedAction,
+            storyAction,
+            cancelAction
+        ].forEach { alertController.addAction($0) }
+        present(alertController, animated: true)
+    }
+}
 private extension MainViewController {
     func setupNavigationBar() {
         logoBarButton.image = UIImage(named: "logo")
         navigationItem.leftBarButtonItem = logoBarButton
+        
+        let plusBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "plus.app"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapPlusBarButton)
+        )
+        navigationItem.rightBarButtonItem = plusBarButtonItem
     }
     func attribute() {
         view.backgroundColor = .systemBackground
