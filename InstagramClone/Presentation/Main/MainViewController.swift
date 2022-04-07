@@ -10,7 +10,6 @@ import SnapKit
 
 class MainViewController: UIViewController {
     
-    private let logoBarButton = UIBarButtonItem()
     private let feedTableView = UITableView()
     
     override func viewDidLoad() {
@@ -83,8 +82,8 @@ extension MainViewController {
 }
 private extension MainViewController {
     func setupNavigationBar() {
+        let logoBarButton = UIBarButtonItem()
         logoBarButton.image = UIImage(named: "logo")
-        navigationItem.leftBarButtonItem = logoBarButton
         
         let plusBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "plus.app"),
@@ -92,6 +91,8 @@ private extension MainViewController {
             target: self,
             action: #selector(didTapPlusBarButton)
         )
+        
+        navigationItem.leftBarButtonItem = logoBarButton
         navigationItem.rightBarButtonItem = plusBarButtonItem
     }
     func attribute() {
