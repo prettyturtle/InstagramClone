@@ -60,7 +60,11 @@ extension MainViewController {
         let feedAction = UIAlertAction(
             title: "게시물",
             style: .default
-        )
+        ) { [weak self] _ in
+            let uploadFeedViewController = UINavigationController(rootViewController: UploadFeedViewController())
+            uploadFeedViewController.modalPresentationStyle = .fullScreen
+            self?.present(uploadFeedViewController, animated: true)
+        }
         let storyAction = UIAlertAction(
             title: "스토리",
             style: .default
