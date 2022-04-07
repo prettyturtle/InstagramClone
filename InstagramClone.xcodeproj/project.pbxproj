@@ -97,9 +97,10 @@
 			isa = PBXGroup;
 			children = (
 				6B82117227F607A9001F199A /* TabBar */,
-				6B82117327F60806001F199A /* Main */,
-				6BE0CFEB27F9F13C00051447 /* Explore */,
 				6BE0CFEE27FAD3DA00051447 /* Account */,
+				6BE0CFEB27F9F13C00051447 /* Explore */,
+				6B82117327F60806001F199A /* Main */,
+				6BCF04FD27FE867200DCDEFE /* UploadFeed */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -120,7 +121,6 @@
 				6B82117427F61705001F199A /* FeedTableViewCell.swift */,
 				6B5B5A8B27F838FB00E3EF11 /* StoryTableViewCell.swift */,
 				6B5B5A8D27F8533900E3EF11 /* StoryCollectionViewCell.swift */,
-				6BCF04FD27FE867200DCDEFE /* UploadFeed */,
 			);
 			path = Main;
 			sourceTree = "<group>";
