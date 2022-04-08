@@ -6,15 +6,19 @@
 //
 
 import UIKit
+import PhotosUI
 import SnapKit
 
 class UploadFeedViewController: UIViewController {
     
     private let imagePickerView = UIImageView()
+    private let imagePickerButton = UIButton()
+    private let numberOfSelectedImageLabel = UILabel()
     private let descriptionTextView = UITextView()
     private let separatorView = UIView()
     private let optionsTableView = UITableView()
     
+    private var selectedImages = [UIImage]()
     private let options = [
         "사람 태그하기",
         "위치 추가"
@@ -59,12 +63,48 @@ extension UploadFeedViewController: UITextViewDelegate {
     }
 }
 
+extension UploadFeedViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        if !results.isEmpty {
+            selectedImages = []
+            results.forEach { result in
+                let itemProvider = result.itemProvider
+                if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                    itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                        guard let self = self else { return }
+                        if let image = image as? UIImage {
+                            self.selectedImages.append(image)
+                            DispatchQueue.main.async {
+                                self.imagePickerView.image = image
+                                self.numberOfSelectedImageLabel.text = "\(self.selectedImages.count)"
+                            }
+                        }
+                        if let error = error {
+                            print("ERROR - UploadFeedViewController - PHPickerViewControllerDelegate - \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
+        dismiss(animated: true)
+    }
+}
+
 extension UploadFeedViewController {
     @objc func didTapLeftBarButton() {
         dismiss(animated: true)
     }
     @objc func didTapRightBarButton() {
         print("didTapRightBarButton is Called!")
+    }
+    @objc func didTapImagePickerButton() {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selection = .ordered
+        config.selectionLimit = 0
+        let imagePickerViewController = PHPickerViewController(configuration: config)
+        imagePickerViewController.delegate = self
+        present(imagePickerViewController, animated: true)
     }
 }
 
@@ -73,6 +113,19 @@ private extension UploadFeedViewController {
         view.backgroundColor = .systemBackground
         
         imagePickerView.backgroundColor = .secondarySystemBackground
+        imagePickerButton.addTarget(
+            self,
+            action: #selector(didTapImagePickerButton),
+            for: .touchUpInside
+        )
+        numberOfSelectedImageLabel.text = "\(selectedImages.count)"
+        numberOfSelectedImageLabel.font = .systemFont(ofSize: 16.0, weight: .semibold)
+        numberOfSelectedImageLabel.textColor = .white
+        numberOfSelectedImageLabel.textAlignment = .center
+        numberOfSelectedImageLabel.backgroundColor = .systemBlue
+        numberOfSelectedImageLabel.clipsToBounds = true
+        numberOfSelectedImageLabel.layer.cornerRadius = 12.0
+        
         descriptionTextView.font = .systemFont(ofSize: 16.0, weight: .regular)
         descriptionTextView.text = "문구 입력..."
         descriptionTextView.textColor = .secondaryLabel
@@ -81,13 +134,18 @@ private extension UploadFeedViewController {
         separatorView.backgroundColor = .separator
         
         optionsTableView.dataSource = self
-        optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "OptionsTableViewCell")
+        optionsTableView.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: "OptionsTableViewCell"
+        )
     }
     func layout() {
         let commonInset: CGFloat = 16.0
         
         [
             imagePickerView,
+            imagePickerButton,
+            numberOfSelectedImageLabel,
             descriptionTextView,
             separatorView,
             optionsTableView
@@ -98,6 +156,37 @@ private extension UploadFeedViewController {
             $0.leading.equalToSuperview().inset(commonInset)
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(commonInset)
         }
+        
+        imagePickerButton.translatesAutoresizingMaskIntoConstraints = false
+        imagePickerButton.widthAnchor.constraint(
+            equalTo: imagePickerView.widthAnchor
+        ).isActive = true
+        imagePickerButton.heightAnchor.constraint(
+            equalTo: imagePickerView.heightAnchor
+        ).isActive = true
+        imagePickerButton.centerXAnchor.constraint(
+            equalTo: imagePickerView.centerXAnchor
+        ).isActive = true
+        imagePickerButton.centerYAnchor.constraint(
+            equalTo: imagePickerView.centerYAnchor
+        ).isActive = true
+        
+        numberOfSelectedImageLabel.translatesAutoresizingMaskIntoConstraints = false
+        numberOfSelectedImageLabel.widthAnchor.constraint(
+            equalToConstant: 24.0
+        ).isActive = true
+        numberOfSelectedImageLabel.heightAnchor.constraint(
+            equalToConstant: 24.0
+        ).isActive = true
+        numberOfSelectedImageLabel.topAnchor.constraint(
+            equalTo: imagePickerView.topAnchor,
+            constant: -8.0
+        ).isActive = true
+        numberOfSelectedImageLabel.trailingAnchor.constraint(
+            equalTo: imagePickerView.trailingAnchor,
+            constant: 8.0
+        ).isActive = true
+        
         descriptionTextView.snp.makeConstraints {
             $0.leading.equalTo(imagePickerView.snp.trailing).offset(8.0)
             $0.top.equalTo(imagePickerView.snp.top)
