@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import PhotosUI
 import SnapKit
 
 class AccountViewController: UIViewController {
     
     private let profileView = UIView()
     private let profileImageView = UIImageView()
+    private let profileImagePickerButton = UIButton()
+    private let profileImagePlusIconView = UILabel()
     private let userNameLabel = UILabel()
     private let postStackView = UIStackView()
     private let postCountLabel = UILabel()
@@ -31,6 +34,8 @@ class AccountViewController: UIViewController {
     private let separatorView = UIView()
     private let collectionViewLayout = UICollectionViewFlowLayout()
     private lazy var myFeedCollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+    
+    private var profileImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +66,38 @@ extension AccountViewController: UICollectionViewDataSource {
         return cell
     }
 }
+extension AccountViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        if let imageProvider = results.first?.itemProvider {
+            if imageProvider.canLoadObject(ofClass: UIImage.self) {
+                imageProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                    guard let self = self else { return }
+                    if let image = image as? UIImage {
+                        DispatchQueue.main.async {
+                            self.profileImageView.image = image
+                            self.profileImage = image
+                        }
+                    }
+                    if let error = error {
+                        print("ERROR - AccountViewController - PHPickerViewControllerDelegate - \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        dismiss(animated: true)
+    }
+}
+
+private extension AccountViewController {
+    @objc func didTapProfileImagePickerButton() {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selectionLimit = 1
+        let imagePickerViewController = PHPickerViewController(configuration: config)
+        imagePickerViewController.delegate = self
+        present(imagePickerViewController, animated: true)
+    }
+}
 
 private extension AccountViewController {
     func attribute() {
@@ -72,6 +109,23 @@ private extension AccountViewController {
         
         profileImageView.backgroundColor = .secondarySystemBackground
         profileImageView.layer.cornerRadius = 40.0
+        profileImageView.clipsToBounds = true
+        
+        profileImagePickerButton.layer.cornerRadius = 40.0
+        profileImagePickerButton.clipsToBounds = true
+        profileImagePickerButton.addTarget(
+            self,
+            action: #selector(didTapProfileImagePickerButton),
+            for: .touchUpInside
+        )
+        profileImagePlusIconView.text = "+"
+        profileImagePlusIconView.font = .systemFont(ofSize: 20.0, weight: .semibold)
+        profileImagePlusIconView.textColor = .white
+        profileImagePlusIconView.textAlignment = .center
+        profileImagePlusIconView.backgroundColor = .systemBlue
+        profileImagePlusIconView.clipsToBounds = true
+        profileImagePlusIconView.layer.cornerRadius = 12.0
+        
         userNameLabel.font = .systemFont(ofSize: 14.0, weight: .medium)
         
         postCountLabel.font = .systemFont(ofSize: 14.0, weight: .semibold)
@@ -129,6 +183,8 @@ private extension AccountViewController {
         let commonInset: CGFloat = 16.0
         [
             profileImageView,
+            profileImagePickerButton,
+            profileImagePlusIconView,
             userNameLabel,
             allStackView,
             profileModifyButton,
@@ -138,6 +194,15 @@ private extension AccountViewController {
         profileImageView.snp.makeConstraints {
             $0.size.equalTo(80.0)
             $0.leading.top.equalToSuperview().inset(commonInset)
+        }
+        profileImagePickerButton.snp.makeConstraints {
+            $0.size.equalTo(profileImageView.snp.width)
+            $0.center.equalTo(profileImageView.snp.center)
+        }
+        profileImagePlusIconView.snp.makeConstraints {
+            $0.size.equalTo(24.0)
+            $0.trailing.equalTo(profileImageView.snp.trailing)
+            $0.bottom.equalTo(profileImageView.snp.bottom)
         }
         userNameLabel.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(commonInset)
