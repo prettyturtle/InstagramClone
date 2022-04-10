@@ -33,10 +33,51 @@ class FeedTableViewCell: UITableViewCell {
     func setupView() {
         attribute()
         layout()
+        tapEvent()
     }
 }
 
 private extension FeedTableViewCell {
+    @objc func didDoubleTapFeedImageView() {
+        print("didDoubleTapFeedImageView!!")
+    }
+    @objc func didTapLikeButton() {
+        print("didTapLikeButton")
+    }
+    @objc func didTapMeatBallMenuButton() {
+        print("didTapMeatBallMenuButton")
+    }
+}
+
+private extension FeedTableViewCell {
+    func tapEvent() {
+        doubleTapLikeEvent()
+        tapLikeButton()
+        tapMeatBallMenuButton()
+    }
+    func doubleTapLikeEvent() {
+        feedImageView.isUserInteractionEnabled = true
+        let doubleTap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(didDoubleTapFeedImageView)
+        )
+        doubleTap.numberOfTapsRequired = 2
+        feedImageView.addGestureRecognizer(doubleTap)
+    }
+    func tapLikeButton() {
+        likeButton.addTarget(
+            self,
+            action: #selector(didTapLikeButton),
+            for: .touchUpInside
+        )
+    }
+    func tapMeatBallMenuButton() {
+        meatBallMenuButton.addTarget(
+            self,
+            action: #selector(didTapMeatBallMenuButton),
+            for: .touchUpInside
+        )
+    }
     func attribute() {
         userNameLabel.text = "20._.chan"
         locationLabel.text = "인하대역 스타벅스"
@@ -50,7 +91,7 @@ private extension FeedTableViewCell {
         userNameAndLocationStackView.spacing = 2.0
         userNameLabel.font = .systemFont(ofSize: 14.0, weight: .medium)
         locationLabel.font = .systemFont(ofSize: 12.0, weight: .regular)
-        meatBallMenuButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
+        meatBallMenuButton.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         
         feedImageView.backgroundColor = .secondarySystemBackground
         
@@ -133,7 +174,7 @@ private extension FeedTableViewCell {
             iconView,
             feedDescriptionView,
             dateLabel
-        ].forEach { addSubview($0) }
+        ].forEach { contentView.addSubview($0) }
         
         userImageView.snp.makeConstraints {
             $0.leading.top.bottom.equalToSuperview().inset(commonInset)
