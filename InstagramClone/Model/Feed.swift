@@ -11,10 +11,10 @@ struct Feed: Codable {
     let id: String
     let user: User
     let location: String
-    private let imageURLString: [String]
+    let imageURLString: [String]
     let likeUser: [User]
     let description: String
-    private let createDate: Date
+    let createDate: Date
     
     var imageURL: [URL?] {
         imageURLString.map { URL(string: $0) }
