@@ -8,8 +8,11 @@
 import UIKit
 import PhotosUI
 import SnapKit
+import Toast
 
 class UploadFeedViewController: UIViewController {
+    
+    private let firebaseDBManager = FirebaseDBManager()
     
     private let imagePickerView = UIImageView()
     private let imagePickerButton = UIButton()
@@ -17,12 +20,15 @@ class UploadFeedViewController: UIViewController {
     private let descriptionTextView = UITextView()
     private let separatorView = UIView()
     private let optionsTableView = UITableView()
+    private let activityIndicatorView = UIActivityIndicatorView()
     
     private var selectedImages = [UIImage]()
     private let options = [
         "사람 태그하기",
         "위치 추가"
     ]
+    
+    weak var delegate: UploadFeedViewDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,12 +102,45 @@ extension UploadFeedViewController {
     }
     @objc func didTapRightBarButton() {
         print("didTapRightBarButton is Called!")
+        
+        activityIndicatorView.startAnimating()
+        
+        view.isUserInteractionEnabled = false
+        navigationItem.leftBarButtonItem?.isEnabled = false
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        
+        let uploadFeed = UploadFeed(
+            user: User.mockUser,
+            location: "인하대역 스타벅스",
+            images: selectedImages,
+            description: descriptionTextView.textColor == .secondaryLabel ? "" : descriptionTextView.text ?? ""
+        )
+        
+        firebaseDBManager.createFeed(
+            uploadFeed: uploadFeed) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success():
+                    self.activityIndicatorView.stopAnimating()
+                    self.dismiss(animated: true)
+                    self.delegate?.didEndUploadFeed()
+                case .failure(let error):
+                    print("ERROR: UploadFeedViewController - didTapRightBarButton - createFeed - \(error.localizedDescription)")
+                    self.activityIndicatorView.stopAnimating()
+                    self.view.makeToast("ERROR!!")
+                    
+                    self.view.isUserInteractionEnabled = true
+                    self.navigationItem.leftBarButtonItem?.isEnabled = true
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                }
+            }
+        
     }
     @objc func didTapImagePickerButton() {
         var config = PHPickerConfiguration()
         config.filter = .images
         config.selection = .ordered
-        config.selectionLimit = 0
+        config.selectionLimit = 5
         let imagePickerViewController = PHPickerViewController(configuration: config)
         imagePickerViewController.delegate = self
         present(imagePickerViewController, animated: true)
@@ -148,7 +187,8 @@ private extension UploadFeedViewController {
             numberOfSelectedImageLabel,
             descriptionTextView,
             separatorView,
-            optionsTableView
+            optionsTableView,
+            activityIndicatorView
         ].forEach { view.addSubview($0) }
         
         imagePickerView.snp.makeConstraints {
@@ -201,6 +241,10 @@ private extension UploadFeedViewController {
         optionsTableView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
             $0.top.equalTo(separatorView.snp.bottom)
+        }
+        
+        activityIndicatorView.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
     }
     func setupNavigationBar() {

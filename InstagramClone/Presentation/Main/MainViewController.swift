@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Toast
 
 class MainViewController: UIViewController {
     
@@ -49,6 +50,13 @@ extension MainViewController: UITableViewDataSource {
         }
     }
 }
+
+extension MainViewController: UploadFeedViewDelegate {
+    func didEndUploadFeed() {
+        view.makeToast("피드 등록 완료!")
+    }
+}
+
 extension MainViewController {
     @objc func didTapPlusBarButton() {
         let alertController = UIAlertController(
@@ -60,7 +68,9 @@ extension MainViewController {
             title: "게시물",
             style: .default
         ) { [weak self] _ in
-            let uploadFeedViewController = UINavigationController(rootViewController: UploadFeedViewController())
+            let rootViewController = UploadFeedViewController()
+            rootViewController.delegate = self
+            let uploadFeedViewController = UINavigationController(rootViewController: rootViewController)
             uploadFeedViewController.modalPresentationStyle = .fullScreen
             self?.present(uploadFeedViewController, animated: true)
         }
