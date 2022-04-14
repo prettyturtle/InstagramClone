@@ -98,5 +98,36 @@ struct FirebaseDBManager {
             }
         }
     }
+    
+    // TODO: - User의 피드, 
+    func readFeed(
+        user: User,
+        completionHandler: @escaping (Result<[Feed], Error>) -> Void
+    ) {
+        var feeds = [Feed]()
+        db.collection(CollectionType.feed.name)
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    for document in documents {
+                        let documentData = document.data()
+                        
+                        do {
+                            let data = try JSONSerialization.data(withJSONObject: documentData)
+                            let feed = try JSONDecoder().decode(Feed.self, from: data)
+                            feeds.append(feed)
+                        } catch {
+                            print("ERROR: FirebaseDBManager - readFeed - getDocuments - decode - \(error.localizedDescription)")
+                            completionHandler(.failure(error))
+                        }
+                    }
+                }
+                if let error = error {
+                    print("ERROR: FirebaseDBManager - readFeed - getDocuments - \(error.localizedDescription)")
+                    completionHandler(.failure(error))
+                }
+                feeds.sort { $0.createDate.compare($1.createDate) == .orderedDescending }
+                completionHandler(.success(feeds))
+            }
+    }
 }
 

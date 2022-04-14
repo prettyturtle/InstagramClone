@@ -47,7 +47,7 @@ extension ExploreViewController: UICollectionViewDataSource {
     }
 }
 
-extension ExploreViewController {
+private extension ExploreViewController {
     @objc func beginRefresh(_ sender: UIRefreshControl) {
         print("beginRefresh!!")
         sender.endRefreshing()

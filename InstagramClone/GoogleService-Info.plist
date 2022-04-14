@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>938569101899-5vn7m4jbue3dimvrojernmnm87scp8mc.apps.googleusercontent.com</string>
+	<string>731474859157-b4h9l4smtchricbqrkr9jk3i3n0llimt.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.938569101899-5vn7m4jbue3dimvrojernmnm87scp8mc</string>
+	<string>com.googleusercontent.apps.731474859157-b4h9l4smtchricbqrkr9jk3i3n0llimt</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAbnDJWfvSy8NntfHRYMRiDbQnIgP9UaKU</string>
+	<string>AIzaSyCiElxI-r-L8_lR5PRYcxbPaF1rQrJGB20</string>
 	<key>GCM_SENDER_ID</key>
-	<string>938569101899</string>
+	<string>731474859157</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>cobugi.InstagramClone</string>
 	<key>PROJECT_ID</key>
-	<string>instagramclone-ade32</string>
+	<string>instagramclone-40dde</string>
 	<key>STORAGE_BUCKET</key>
-	<string>instagramclone-ade32.appspot.com</string>
+	<string>instagramclone-40dde.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:938569101899:ios:9ab36b4f7f861f29c0d3ce</string>
+	<string>1:731474859157:ios:4be43d00388bbd0730379c</string>
 </dict>
 </plist>

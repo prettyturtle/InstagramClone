@@ -30,10 +30,21 @@ class FeedTableViewCell: UITableViewCell {
     
     private let dateLabel = UILabel()
     
-    func setupView() {
+    func setupView(feed: Feed) {
         attribute()
         layout()
         tapEvent()
+        
+        userNameLabel.text = feed.user.nickName
+        locationLabel.text = feed.location
+        likePeopleLabel.text = !feed.likeUser.isEmpty ? "\(feed.likeUser.first!.nickName)님 외 \(feed.likeUser.count)명이 좋아합니다" : ""
+        descriptionLabel.text = "\(feed.user.nickName) \(feed.description)"
+        dateLabel.text = feed.date
+        
+        setImage(url: feed.user.profileImageURL) { [weak self] image in
+            guard let self = self else { return }
+            self.userImageView.image = image
+        }
     }
 }
 
@@ -50,6 +61,21 @@ private extension FeedTableViewCell {
 }
 
 private extension FeedTableViewCell {
+    func setImage(url: URL?, completionHandler: @escaping (UIImage?) -> Void) {
+        guard let url = url else { return }
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try Data(contentsOf: url)
+                let image = UIImage(data: data)
+                DispatchQueue.main.async {
+                    completionHandler(image)
+                }
+            } catch {
+                print("ERROR: FeedTableViewCell - setImage - do catch - \(error.localizedDescription)")
+            }
+        }
+    }
+    
     func tapEvent() {
         doubleTapLikeEvent()
         tapLikeButton()
@@ -79,14 +105,9 @@ private extension FeedTableViewCell {
         )
     }
     func attribute() {
-        userNameLabel.text = "20._.chan"
-        locationLabel.text = "인하대역 스타벅스"
-        likePeopleLabel.text = "mult_chord.sh님 외 41명이 좋아합니다"
-        descriptionLabel.text = "20._.chan 그들의 얼마나 있으며, 같이, 것이다. 인간이 이성은 인류의 두기 끝에 유소년에게서 있으랴? 뛰노는 기관과 생생하며, 사막이다. 바이며, 보내는 우리의 품었기 피부가 칼이다. 그것을 청춘은 가는 남는 스며들어 않는 곧 이것이다."
-        dateLabel.text = "3월 24일"
-        
         userImageView.backgroundColor = .secondarySystemBackground
         userImageView.layer.cornerRadius = 22.0
+        userImageView.clipsToBounds = true
         userNameAndLocationStackView.axis = .vertical
         userNameAndLocationStackView.spacing = 2.0
         userNameLabel.font = .systemFont(ofSize: 14.0, weight: .medium)

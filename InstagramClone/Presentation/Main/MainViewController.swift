@@ -11,19 +11,25 @@ import Toast
 
 class MainViewController: UIViewController {
     
+    private let firebaseDBManager = FirebaseDBManager()
+    
     private let feedTableView = UITableView()
+    private let refreshControl = UIRefreshControl()
+    
+    private var feeds = [Feed]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
         attribute()
         layout()
+        getFeeds()
     }
 }
 
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return feeds.count + 1
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
@@ -43,7 +49,8 @@ extension MainViewController: UITableViewDataSource {
                 for: indexPath
             ) as? FeedTableViewCell else { return UITableViewCell() }
             
-            cell.setupView()
+            let feed = feeds[indexPath.row - 1]
+            cell.setupView(feed: feed)
             cell.selectionStyle = .none
             
             return cell
@@ -57,7 +64,10 @@ extension MainViewController: UploadFeedViewDelegate {
     }
 }
 
-extension MainViewController {
+private extension MainViewController {
+    @objc func beginRefresh() {
+        getFeeds()
+    }
     @objc func didTapPlusBarButton() {
         let alertController = UIAlertController(
             title: nil,
@@ -91,6 +101,21 @@ extension MainViewController {
     }
 }
 private extension MainViewController {
+    func getFeeds() {
+        firebaseDBManager.readFeed(
+            user: User.mockUser) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let feeds):
+                    self.feeds = feeds
+                    self.feedTableView.reloadData()
+                    self.refreshControl.endRefreshing()
+                case .failure(let error):
+                    print("ERROR: MainViewController - getFeeds - \(error.localizedDescription)")
+                    self.view.makeToast("피드를 불러오는데 실패했습니다")
+                }
+            }
+    }
     func setupNavigationBar() {
         let logoBarButton = UIBarButtonItem()
         logoBarButton.image = UIImage(named: "logo")
@@ -107,6 +132,9 @@ private extension MainViewController {
     }
     func attribute() {
         view.backgroundColor = .systemBackground
+        
+        refreshControl.addTarget(self, action: #selector(beginRefresh), for: .valueChanged)
+        feedTableView.refreshControl = refreshControl
         
         feedTableView.showsVerticalScrollIndicator = false
         feedTableView.rowHeight = UITableView.automaticDimension
