@@ -99,7 +99,7 @@ struct FirebaseDBManager {
         }
     }
     
-    // TODO: - User의 피드, 
+    // TODO: - User의 피드, User가 팔로우 한 사람들의 피드를 가져오기
     func readFeed(
         user: User,
         completionHandler: @escaping (Result<[Feed], Error>) -> Void
