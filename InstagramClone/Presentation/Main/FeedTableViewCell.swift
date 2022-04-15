@@ -17,7 +17,8 @@ class FeedTableViewCell: UITableViewCell {
     private let userNameLabel = UILabel()
     private let locationLabel = UILabel()
     private let meatBallMenuButton = UIButton()
-    private let feedImageView = UIImageView()
+    private let collectionViewLayout = UICollectionViewFlowLayout()
+    private lazy var feedImageCollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     private let likeButton = UIButton()
     private let commentButton = UIButton()
     private let directMessageButton = UIButton()
@@ -29,6 +30,8 @@ class FeedTableViewCell: UITableViewCell {
     private let feedDescriptionView = UIView()
     
     private let dateLabel = UILabel()
+    
+    private var feedImages = [UIImage?]()
     
     func setupView(feed: Feed) {
         attribute()
@@ -45,6 +48,33 @@ class FeedTableViewCell: UITableViewCell {
             guard let self = self else { return }
             self.userImageView.image = image
         }
+        
+        setImages(urls: feed.imageURL) { [weak self] images in
+            guard let self = self else { return }
+            self.feedImages = images
+            self.feedImageCollectionView.reloadData()
+        }
+    }
+}
+
+extension FeedTableViewCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let size = collectionView.frame.width
+        return CGSize(width: size, height: size)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0.0
+    }
+}
+
+extension FeedTableViewCell: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return feedImages.count
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedImageCollectionViewCell.identifier, for: indexPath) as? FeedImageCollectionViewCell else { return UICollectionViewCell() }
+        cell.setupView(image: feedImages[indexPath.item])
+        return cell
     }
 }
 
@@ -61,6 +91,20 @@ private extension FeedTableViewCell {
 }
 
 private extension FeedTableViewCell {
+    func setImages(urls: [URL?], completionHandler: @escaping ([UIImage?]) -> Void) {
+        let urls = urls.compactMap { $0 }
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let datas = try urls.map { try Data(contentsOf: $0) }
+                let images = datas.map { UIImage(data: $0) }
+                DispatchQueue.main.async {
+                    completionHandler(images)
+                }
+            } catch {
+                print("ERROR: FeedTableViewCell - setImages - do catch - \(error.localizedDescription)")
+            }
+        }
+    }
     func setImage(url: URL?, completionHandler: @escaping (UIImage?) -> Void) {
         guard let url = url else { return }
         DispatchQueue.global(qos: .background).async {
@@ -82,13 +126,12 @@ private extension FeedTableViewCell {
         tapMeatBallMenuButton()
     }
     func doubleTapLikeEvent() {
-        feedImageView.isUserInteractionEnabled = true
         let doubleTap = UITapGestureRecognizer(
             target: self,
             action: #selector(didDoubleTapFeedImageView)
         )
         doubleTap.numberOfTapsRequired = 2
-        feedImageView.addGestureRecognizer(doubleTap)
+        feedImageCollectionView.addGestureRecognizer(doubleTap)
     }
     func tapLikeButton() {
         likeButton.addTarget(
@@ -114,7 +157,14 @@ private extension FeedTableViewCell {
         locationLabel.font = .systemFont(ofSize: 12.0, weight: .regular)
         meatBallMenuButton.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         
-        feedImageView.backgroundColor = .secondarySystemBackground
+        collectionViewLayout.scrollDirection = .horizontal
+        feedImageCollectionView.isPagingEnabled = true
+        feedImageCollectionView.dataSource = self
+        feedImageCollectionView.delegate = self
+        feedImageCollectionView.register(
+            FeedImageCollectionViewCell.self,
+            forCellWithReuseIdentifier: FeedImageCollectionViewCell.identifier
+        )
         
         likeButton.setImage(systemName: "heart")
         commentButton.setImage(systemName: "message")
@@ -191,7 +241,7 @@ private extension FeedTableViewCell {
         
         [
             feedHeaderView,
-            feedImageView,
+            feedImageCollectionView,
             iconView,
             feedDescriptionView,
             dateLabel
@@ -211,13 +261,13 @@ private extension FeedTableViewCell {
         feedHeaderView.snp.makeConstraints {
             $0.leading.top.trailing.equalToSuperview()
         }
-        feedImageView.snp.makeConstraints {
+        feedImageCollectionView.snp.makeConstraints {
             $0.top.equalTo(feedHeaderView.snp.bottom)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(feedImageView.snp.width)
+            $0.height.equalTo(feedImageCollectionView.snp.width)
         }
         iconView.snp.makeConstraints {
-            $0.top.equalTo(feedImageView.snp.bottom)
+            $0.top.equalTo(feedImageCollectionView.snp.bottom)
             $0.leading.trailing.equalToSuperview()
         }
         feedDescriptionView.snp.makeConstraints {
