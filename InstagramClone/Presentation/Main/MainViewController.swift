@@ -51,10 +51,17 @@ extension MainViewController: UITableViewDataSource {
             
             let feed = feeds[indexPath.row - 1]
             cell.setupView(feed: feed)
+            cell.delegate = self
             cell.selectionStyle = .none
             
             return cell
         }
+    }
+}
+
+extension MainViewController: FeedTableViewCellDelegate {
+    func showAlert(_ alertController: UIAlertController) {
+        present(alertController, animated: true)
     }
 }
 

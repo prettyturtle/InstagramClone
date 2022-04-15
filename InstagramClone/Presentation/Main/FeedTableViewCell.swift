@@ -8,6 +8,10 @@
 import UIKit
 import SnapKit
 
+protocol FeedTableViewCellDelegate: AnyObject {
+    func showAlert(_ alertController: UIAlertController)
+}
+
 class FeedTableViewCell: UITableViewCell {
     static let identifier = "FeedTableViewCell"
     
@@ -32,11 +36,16 @@ class FeedTableViewCell: UITableViewCell {
     private let dateLabel = UILabel()
     
     private var feedImages = [UIImage?]()
+    private var feed: Feed?
+    
+    weak var delegate: FeedTableViewCellDelegate?
     
     func setupView(feed: Feed) {
         attribute()
         layout()
         tapEvent()
+        
+        self.feed = feed
         
         userNameLabel.text = feed.user.nickName
         locationLabel.text = feed.location
@@ -86,7 +95,31 @@ private extension FeedTableViewCell {
         print("didTapLikeButton")
     }
     @objc func didTapMeatBallMenuButton() {
-        print("didTapMeatBallMenuButton")
+        let alertController = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        let modifyAction = UIAlertAction(title: "수정", style: .default)
+        let deleteAction = UIAlertAction(title: "삭제", style: .destructive)
+        let shareAction = UIAlertAction(title: "공유", style: .default)
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        guard let feed = feed else { return }
+        if feed.user == User.mockUser {
+            [
+                modifyAction,
+                deleteAction,
+                cancelAction
+            ].forEach { alertController.addAction($0) }
+        } else {
+            [
+                shareAction,
+                cancelAction
+            ].forEach { alertController.addAction($0) }
+        }
+        
+        delegate?.showAlert(alertController)
     }
 }
 
