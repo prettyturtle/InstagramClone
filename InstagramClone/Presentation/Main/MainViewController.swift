@@ -60,6 +60,20 @@ extension MainViewController: UITableViewDataSource {
 }
 
 extension MainViewController: FeedTableViewCellDelegate {
+    func deleteFeed(feed: Feed) {
+        firebaseDBManager.deleteFeed(feed: feed) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success():
+                self.view.makeToast("피드 삭제 성공!")
+                self.getFeeds()
+            case .failure(let error):
+                print("ERROR: MainViewController - FeedTableViewCellDelegate - deleteFeed - \(error.localizedDescription)")
+                self.view.makeToast("피드 삭제를 실패했습니다")
+            }
+        }
+    }
+    
     func showAlert(_ alertController: UIAlertController) {
         present(alertController, animated: true)
     }

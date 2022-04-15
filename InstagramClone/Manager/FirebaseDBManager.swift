@@ -129,5 +129,23 @@ struct FirebaseDBManager {
                 completionHandler(.success(feeds))
             }
     }
+    
+    // TODO: - 사진도 함께 삭제하는 기능 추가
+    /// 피드를 삭제하는 메서드
+    func deleteFeed(
+        feed: Feed,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        db.collection(CollectionType.feed.name)
+            .document(feed.id)
+            .delete { error in
+                if let error = error {
+                    completionHandler(.failure(error))
+                    print("ERROR: FirebaseDBManager - deleteFeed - \(error.localizedDescription)")
+                } else {
+                    completionHandler(.success(()))
+                }
+            }
+    }
 }
 

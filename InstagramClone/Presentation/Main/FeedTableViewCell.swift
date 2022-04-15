@@ -8,10 +8,6 @@
 import UIKit
 import SnapKit
 
-protocol FeedTableViewCellDelegate: AnyObject {
-    func showAlert(_ alertController: UIAlertController)
-}
-
 class FeedTableViewCell: UITableViewCell {
     static let identifier = "FeedTableViewCell"
     
@@ -95,17 +91,22 @@ private extension FeedTableViewCell {
         print("didTapLikeButton")
     }
     @objc func didTapMeatBallMenuButton() {
+        guard let feed = feed else { return }
         let alertController = UIAlertController(
             title: nil,
             message: nil,
             preferredStyle: .actionSheet
         )
         let modifyAction = UIAlertAction(title: "수정", style: .default)
-        let deleteAction = UIAlertAction(title: "삭제", style: .destructive)
+        let deleteAction = UIAlertAction(
+            title: "삭제",
+            style: .destructive
+        ) { _ in
+            self.delegate?.deleteFeed(feed: feed)
+        }
         let shareAction = UIAlertAction(title: "공유", style: .default)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         
-        guard let feed = feed else { return }
         if feed.user == User.mockUser {
             [
                 modifyAction,
