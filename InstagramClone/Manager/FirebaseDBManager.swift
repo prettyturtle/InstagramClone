@@ -16,6 +16,8 @@ struct FirebaseDBManager {
     private let storage = Storage.storage()
     
     /// 피드 추가 메서드
+    ///
+    /// 피드를 추가하면서 피드를 등록한 유저의 피드 정보도 함께 수정된다
     func createFeed(
         uploadFeed: UploadFeed,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -43,7 +45,15 @@ struct FirebaseDBManager {
                                     print("ERROR: FirebaseDBManager - createFeed - setData - \(error.localizedDescription)")
                                     completionHandler(.failure(error))
                                 } else {
-                                    completionHandler(.success(()))
+                                    updateUserUploadedFeed(userID: feed.user.id, uploadedFeedID: feed.id) { result in
+                                        switch result {
+                                        case .success(_):
+                                            completionHandler(.success(()))
+                                        case .failure(let error):
+                                            print("ERROR: FirebaseDBManager - createFeed - setData - updateUserUploadedFeed - \(error.localizedDescription)")
+                                            completionHandler(.failure(error))
+                                        }
+                                    }
                                 }
                             }
                     }
@@ -132,6 +142,8 @@ struct FirebaseDBManager {
     
     // TODO: - 사진도 함께 삭제하는 기능 추가
     /// 피드를 삭제하는 메서드
+    ///
+    /// 피드를 삭제할 때 유저의 피드 정보에 있는 피드도 함께 삭제한다
     func deleteFeed(
         feed: Feed,
         completionHandler: @escaping (Result<Void, Error>) -> Void
@@ -143,7 +155,105 @@ struct FirebaseDBManager {
                     completionHandler(.failure(error))
                     print("ERROR: FirebaseDBManager - deleteFeed - \(error.localizedDescription)")
                 } else {
-                    completionHandler(.success(()))
+                    updateUserDeletedFeed(userID: feed.user.id, deletedFeedID: feed.id) { result in
+                        switch result {
+                        case .success(_):
+                            completionHandler(.success(()))
+                        case .failure(let error):
+                            print("ERROR: FirebaseDBManager - deleteFeed - updateUserDeletedFeed - \(error.localizedDescription)")
+                            completionHandler(.failure(error))
+                        }
+                    }
+                }
+            }
+    }
+    
+    // MARK: - User
+    func createUser(user: User, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        do {
+            let userData = try JSONEncoder().encode(user)
+            if let userDataDict = try JSONSerialization.jsonObject(with: userData) as? [String: Any] {
+                db.collection(CollectionType.user.name)
+                    .document(user.id)
+                    .setData(userDataDict) { error in
+                        if let error = error {
+                            print("ERROR: FirebaseDBManager - createUser - \(error.localizedDescription)")
+                            completionHandler(.failure(error))
+                        } else {
+                            completionHandler(.success(()))
+                        }
+                    }
+            }
+        } catch {
+            print("ERROR: FirebaseDBManager - createUser - do catch - \(error.localizedDescription)")
+            completionHandler(.failure(error))
+        }
+    }
+    
+    /// 피드가 업로드 되면 유저의 피드 정보에 추가하는 메서드
+    func updateUserUploadedFeed(
+        userID: String,
+        uploadedFeedID: String,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        db.collection(CollectionType.user.name)
+            .document(userID)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    print("ERROR: FirebaseDBManager - updateUserUploadedFeed - getDocument - \(error.localizedDescription)")
+                    completionHandler(.failure(error))
+                }
+                if let snapshot = snapshot {
+                    guard let data = snapshot.data(),
+                          let currentFeeds = data["feed"] as? [String] else { return }
+                    db.collection(CollectionType.user.name)
+                        .document(userID)
+                        .updateData(
+                            [
+                                "feed": currentFeeds + [uploadedFeedID]
+                            ] as [String: Any]) { error in
+                                if let error = error {
+                                    print("ERROR: FirebaseDBManager - updateUserUploadedFeed - updateData - \(error.localizedDescription)")
+                                    completionHandler(.failure(error))
+                                } else {
+                                    completionHandler(.success(()))
+                                }
+                            }
+                }
+            }
+    }
+    
+    /// 피드가 삭제되면 유저의 피드 정보에서 삭제하는 메서드
+    func updateUserDeletedFeed(
+        userID: String,
+        deletedFeedID: String,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        db.collection(CollectionType.user.name)
+            .document(userID)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    print("ERROR: FirebaseDBManager - updateUserDeletedFeed - getDocument - \(error.localizedDescription)")
+                    completionHandler(.failure(error))
+                }
+                if let snapshot = snapshot {
+                    guard let data = snapshot.data(),
+                          let currentFeeds = data["feed"] as? [String] else { return }
+                    let updatedFeeds = currentFeeds.filter { $0 != deletedFeedID }
+                    
+                    db.collection(CollectionType.user.name)
+                        .document(userID)
+                        .updateData(
+                            [
+                                "feed": updatedFeeds
+                            ] as [String: Any]) { error in
+                                if let error = error {
+                                    print("ERROR: FirebaseDBManager - updateUserDeletedFeed - updateData - \(error.localizedDescription)")
+                                    completionHandler(.failure(error))
+                                } else {
+                                    completionHandler(.success(()))
+                                }
+                            }
                 }
             }
     }
