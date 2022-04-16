@@ -110,7 +110,7 @@ extension UploadFeedViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
         
         let uploadFeed = UploadFeed(
-            user: User.mockUser,
+            user: [User.mockUser, User.mockUser2, User.mockUser3].randomElement()!,
             location: "인하대역 스타벅스",
             images: selectedImages,
             description: descriptionTextView.textColor == .secondaryLabel ? "" : descriptionTextView.text ?? ""
@@ -134,7 +134,6 @@ extension UploadFeedViewController {
                     self.navigationItem.rightBarButtonItem?.isEnabled = true
                 }
             }
-        
     }
     @objc func didTapImagePickerButton() {
         var config = PHPickerConfiguration()
