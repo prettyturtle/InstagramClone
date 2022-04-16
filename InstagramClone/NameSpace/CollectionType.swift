@@ -9,6 +9,7 @@ import Foundation
 
 enum CollectionType: String {
     case feed = "Feed"
+    case user = "User"
     
     var name: String { self.rawValue }
 }
