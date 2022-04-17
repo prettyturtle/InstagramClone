@@ -60,6 +60,13 @@ extension MainViewController: UITableViewDataSource {
 }
 
 extension MainViewController: FeedTableViewCellDelegate {
+    func modifyFeed(feed: Feed) {
+        let rootViewController = ModifyFeedViewController(feed: feed)
+        rootViewController.feed = feed
+        let modifyFeedViewController = UINavigationController(rootViewController: rootViewController)
+        modifyFeedViewController.modalPresentationStyle = .fullScreen
+        present(modifyFeedViewController, animated: true)
+    }
     func deleteFeed(feed: Feed) {
         firebaseDBManager.deleteFeed(feed: feed) { [weak self] result in
             guard let self = self else { return }

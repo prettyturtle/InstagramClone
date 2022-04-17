@@ -97,17 +97,22 @@ private extension FeedTableViewCell {
             message: nil,
             preferredStyle: .actionSheet
         )
-        let modifyAction = UIAlertAction(title: "수정", style: .default)
+        let modifyAction = UIAlertAction(
+            title: "수정",
+            style: .default
+        ) { [weak self] _ in
+            self?.delegate?.modifyFeed(feed: feed)
+        }
         let deleteAction = UIAlertAction(
             title: "삭제",
             style: .destructive
-        ) { _ in
-            self.delegate?.deleteFeed(feed: feed)
+        ) { [weak self] _ in
+            self?.delegate?.deleteFeed(feed: feed)
         }
         let shareAction = UIAlertAction(title: "공유", style: .default)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         
-        if feed.user == User.mockUser {
+        if feed.user == User.mockUser2 {
             [
                 modifyAction,
                 deleteAction,
