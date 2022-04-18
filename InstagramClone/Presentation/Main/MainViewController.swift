@@ -63,6 +63,7 @@ extension MainViewController: FeedTableViewCellDelegate {
     func modifyFeed(feed: Feed) {
         let rootViewController = ModifyFeedViewController(feed: feed)
         rootViewController.feed = feed
+        rootViewController.delegate = self
         let modifyFeedViewController = UINavigationController(rootViewController: rootViewController)
         modifyFeedViewController.modalPresentationStyle = .fullScreen
         present(modifyFeedViewController, animated: true)
@@ -86,6 +87,11 @@ extension MainViewController: FeedTableViewCellDelegate {
     }
 }
 
+extension MainViewController: ModifyFeedViewDelegate {
+    func didEndModifyFeed() {
+        view.makeToast("피드 수정 완료!")
+    }
+}
 extension MainViewController: UploadFeedViewDelegate {
     func didEndUploadFeed() {
         view.makeToast("피드 등록 완료!")

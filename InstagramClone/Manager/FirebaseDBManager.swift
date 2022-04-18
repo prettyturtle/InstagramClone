@@ -140,6 +140,23 @@ struct FirebaseDBManager {
             }
     }
     
+    func updateFeed(
+        feed: Feed,
+        newDescription: String,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        db.collection(CollectionType.feed.name)
+            .document(feed.id)
+            .updateData(["description": newDescription] as [String: Any]) { error in
+                if let error = error {
+                    print("ERROR: FirebaseDBManager - updateFeed - updateData - \(error.localizedDescription)")
+                    completionHandler(.failure(error))
+                } else {
+                    completionHandler(.success(()))
+                }
+            }
+    }
+    
     // TODO: - 사진도 함께 삭제하는 기능 추가
     /// 피드를 삭제하는 메서드
     ///

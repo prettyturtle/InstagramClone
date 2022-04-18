@@ -33,6 +33,7 @@
 		6B83CB862805D8D50070AA29 /* UploadFeedViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B83CB852805D8D50070AA29 /* UploadFeedViewDelegate.swift */; };
 		6B8699BF2809C7790024B694 /* FeedTableViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8699BE2809C7780024B694 /* FeedTableViewCellDelegate.swift */; };
 		6B9F9273280583190086A1B4 /* CollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9F9272280583190086A1B4 /* CollectionType.swift */; };
+		6BC0711F280D8BC700362F36 /* ModifyFeedViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC0711E280D8BC700362F36 /* ModifyFeedViewDelegate.swift */; };
 		6BCCE3B62807FE910069A877 /* FeedImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCCE3B52807FE910069A877 /* FeedImageCollectionViewCell.swift */; };
 		6BCF04FC27FE866F00DCDEFE /* UploadFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF04FB27FE866F00DCDEFE /* UploadFeedViewController.swift */; };
 		6BE0CFEA27F9F13300051447 /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0CFE927F9F13300051447 /* ExploreViewController.swift */; };
@@ -63,6 +64,7 @@
 		6B83CB852805D8D50070AA29 /* UploadFeedViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadFeedViewDelegate.swift; sourceTree = "<group>"; };
 		6B8699BE2809C7780024B694 /* FeedTableViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCellDelegate.swift; sourceTree = "<group>"; };
 		6B9F9272280583190086A1B4 /* CollectionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionType.swift; sourceTree = "<group>"; };
+		6BC0711E280D8BC700362F36 /* ModifyFeedViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyFeedViewDelegate.swift; sourceTree = "<group>"; };
 		6BCCE3B52807FE910069A877 /* FeedImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		6BCF04FB27FE866F00DCDEFE /* UploadFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadFeedViewController.swift; sourceTree = "<group>"; };
 		6BE0CFE927F9F13300051447 /* ExploreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 			children = (
 				6B8699BE2809C7780024B694 /* FeedTableViewCellDelegate.swift */,
 				6B83CB852805D8D50070AA29 /* UploadFeedViewDelegate.swift */,
+				6BC0711E280D8BC700362F36 /* ModifyFeedViewDelegate.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6BE0CFEA27F9F13300051447 /* ExploreViewController.swift in Sources */,
+				6BC0711F280D8BC700362F36 /* ModifyFeedViewDelegate.swift in Sources */,
 				6B81F6092804981E000E2D07 /* FirebaseDBManager.swift in Sources */,
 				6B81F5F928034332000E2D07 /* Feed.swift in Sources */,
 				6BCF04FC27FE866F00DCDEFE /* UploadFeedViewController.swift in Sources */,

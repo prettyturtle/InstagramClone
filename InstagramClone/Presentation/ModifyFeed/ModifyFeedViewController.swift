@@ -7,14 +7,18 @@
 
 import UIKit
 import SnapKit
+import Toast
 
 class ModifyFeedViewController: UIViewController {
+    
+    private let firebaseDBManager = FirebaseDBManager()
     
     private let collectionViewLayout = UICollectionViewFlowLayout()
     private lazy var selectedImageCollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     private let descriptionTextView = UITextView()
     
     var feed: Feed
+    weak var delegate: ModifyFeedViewDelegate?
     
     init(feed: Feed) {
         self.feed = feed
@@ -63,6 +67,20 @@ private extension ModifyFeedViewController {
     }
     @objc func didTapRightBarButton() {
         print("didTapRightBarButton!")
+        firebaseDBManager.updateFeed(
+            feed: feed,
+            newDescription: descriptionTextView.text!
+        ) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(_):
+                self.dismiss(animated: true)
+                self.delegate?.didEndModifyFeed()
+            case .failure(let error):
+                print("ERROR: ModifyFeedViewController - didTapRightBarButton - updateFeed - \(error.localizedDescription)")
+                self.view.makeToast("피드 수정을 실패했습니다")
+            }
+        }
     }
 }
 
