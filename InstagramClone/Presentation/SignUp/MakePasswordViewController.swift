@@ -1,5 +1,5 @@
 //
-//  MakeNickNameViewController.swift
+//  MakePasswordViewController.swift
 //  InstagramClone
 //
 //  Created by yc on 2022/04/22.
@@ -8,11 +8,11 @@
 import UIKit
 import SnapKit
 
-class MakeNickNameViewController: UIViewController {
+class MakePasswordViewController: UIViewController {
     
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
-    private let nickNameTextField = UITextField()
+    private let passwordTextField = UITextField()
     private let nextButton = UIButton()
     
     override func viewDidLoad() {
@@ -26,7 +26,7 @@ class MakeNickNameViewController: UIViewController {
     }
 }
 
-extension MakeNickNameViewController: UITextFieldDelegate {
+extension MakePasswordViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
         return true
@@ -37,52 +37,45 @@ extension MakeNickNameViewController: UITextFieldDelegate {
     }
 }
 
-private extension MakeNickNameViewController {
+private extension MakePasswordViewController {
     @objc func didTapLeftBarButton() {
         dismiss(animated: true)
     }
     @objc func didTapNextButton() {
         print("didTapNextButton")
-        let makePasswordViewController = MakePasswordViewController()
-        navigationController?.pushViewController(makePasswordViewController, animated: true)
     }
 }
 
-private extension MakeNickNameViewController {
+private extension MakePasswordViewController {
     func setupNavigationBar() {
-        let leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "xmark"),
-            style: .plain,
-            target: self,
-            action: #selector(didTapLeftBarButton)
-        )
-        leftBarButtonItem.tintColor = .label
-        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationController?.navigationBar.topItem?.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .label
     }
     func attribute() {
         view.backgroundColor = .systemBackground
         
-        nickNameTextField.becomeFirstResponder()
+        passwordTextField.becomeFirstResponder()
         
-        titleLabel.text = "사용자 이름 만들기"
+        titleLabel.text = "비밀번호 만들기"
         titleLabel.font = .systemFont(ofSize: 32.0, weight: .medium)
         titleLabel.textAlignment = .center
-        descriptionLabel.text = "새 계정에 사용할 사용자 이름을 선택하세요. 나중에 언제든지 변경할 수 있습니다."
+        descriptionLabel.text = "비밀번호를 저장할 수 있으므로 iCloud® 기기에서 로그인 정보를 입력하지 않아도 됩니다."
         descriptionLabel.font = .systemFont(ofSize: 16.0, weight: .medium)
         descriptionLabel.textColor = .secondaryLabel
         descriptionLabel.numberOfLines = 2
         descriptionLabel.textAlignment = .center
-        nickNameTextField.placeholder = "사용자 이름"
-        nickNameTextField.font = .systemFont(ofSize: 16.0, weight: .medium)
-        nickNameTextField.borderStyle = .roundedRect
-        nickNameTextField.autocapitalizationType = .none
-        nickNameTextField.autocorrectionType = .no
-        nickNameTextField.spellCheckingType = .no
-        nickNameTextField.clearButtonMode = .whileEditing
-        nickNameTextField.leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 8.0, height: 0.0))
-        nickNameTextField.leftViewMode = .always
-        nickNameTextField.returnKeyType = .done
-        nickNameTextField.delegate = self
+        passwordTextField.placeholder = "비밀번호"
+        passwordTextField.font = .systemFont(ofSize: 16.0, weight: .medium)
+        passwordTextField.borderStyle = .roundedRect
+        passwordTextField.autocapitalizationType = .none
+        passwordTextField.autocorrectionType = .no
+        passwordTextField.spellCheckingType = .no
+        passwordTextField.clearButtonMode = .whileEditing
+        passwordTextField.leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 8.0, height: 0.0))
+        passwordTextField.leftViewMode = .always
+        passwordTextField.returnKeyType = .done
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.delegate = self
         nextButton.setTitle("다음", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = .systemFont(ofSize: 16.0, weight: .medium)
@@ -100,7 +93,7 @@ private extension MakeNickNameViewController {
         [
             titleLabel,
             descriptionLabel,
-            nickNameTextField,
+            passwordTextField,
             nextButton
         ].forEach { view.addSubview($0) }
         
@@ -114,15 +107,17 @@ private extension MakeNickNameViewController {
             $0.top.equalTo(titleLabel.snp.bottom).offset(commonInset)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
         }
-        nickNameTextField.snp.makeConstraints {
+        passwordTextField.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(commonInset)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
             $0.height.equalTo(48.0)
         }
         nextButton.snp.makeConstraints {
-            $0.top.equalTo(nickNameTextField.snp.bottom).offset(commonInset)
+            $0.top.equalTo(passwordTextField.snp.bottom).offset(commonInset)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
             $0.height.equalTo(48.0)
         }
     }
 }
+
+
