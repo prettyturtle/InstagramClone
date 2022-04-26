@@ -43,7 +43,9 @@ private extension MakeNickNameViewController {
     }
     @objc func didTapNextButton() {
         print("didTapNextButton")
-        let makePasswordViewController = MakePasswordViewController()
+        let makePasswordViewController = MakePasswordViewController(
+            nickName: nickNameTextField.text!
+        )
         navigationController?.pushViewController(makePasswordViewController, animated: true)
     }
 }

@@ -13,15 +13,15 @@ struct User: Codable, Equatable {
     }
     
     let id: String
-    let name: String
+    let name: String?
     let nickName: String
-    let profileImageURLString: String
+    let profileImageURLString: String?
     let feed: [String]
     let follower: [String]
     let following: [String]
     let like: [String]
     
-    var profileImageURL: URL? { URL(string: profileImageURLString) }
+    var profileImageURL: URL? { URL(string: profileImageURLString ?? "") }
     
     static let mockUser = User(
         id: "BD43F628-3017-473D-A521-B9F768BC077A",

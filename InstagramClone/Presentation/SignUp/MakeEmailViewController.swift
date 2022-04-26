@@ -1,24 +1,27 @@
 //
-//  MakePasswordViewController.swift
+//  MakeEmailViewController.swift
 //  InstagramClone
 //
-//  Created by yc on 2022/04/22.
+//  Created by yc on 2022/04/26.
 //
 
 import UIKit
 import SnapKit
 
-class MakePasswordViewController: UIViewController {
+class MakeEmailViewController: UIViewController {
     
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
-    private let passwordTextField = UITextField()
+    private let emailTextField = UITextField()
     private let nextButton = UIButton()
     
+    let password: String
     let nickName: String
+    private let firebaseAuthManager = FirebaseAuthManager()
     
-    init(nickName: String) {
+    init(nickName: String, password: String) {
         self.nickName = nickName
+        self.password = password
         super.init(nibName: nil, bundle: nil)
     }
     required init?(coder: NSCoder) {
@@ -36,7 +39,7 @@ class MakePasswordViewController: UIViewController {
     }
 }
 
-extension MakePasswordViewController: UITextFieldDelegate {
+extension MakeEmailViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
         return true
@@ -47,51 +50,71 @@ extension MakePasswordViewController: UITextFieldDelegate {
     }
 }
 
-private extension MakePasswordViewController {
+private extension MakeEmailViewController {
     @objc func didTapLeftBarButton() {
         dismiss(animated: true)
     }
     @objc func didTapNextButton() {
         print("didTapNextButton")
-        let makeEmailViewController = MakeEmailViewController(
-            nickName: self.nickName,
-            password: passwordTextField.text!
-        )
-        navigationController?.pushViewController(makeEmailViewController, animated: true)
+        firebaseAuthManager.signUp(
+            email: emailTextField.text!,
+            password: password,
+            nickName: nickName) { [weak self] result in
+                switch result {
+                case .success(_):
+                    let alertController = UIAlertController(
+                        title: "회원가입 성공",
+                        message: nil,
+                        preferredStyle: .alert
+                    )
+                    let okAction = UIAlertAction(title: "OK", style: .default)
+                    alertController.addAction(okAction)
+                    self?.present(alertController, animated: true)
+                case .failure(let error):
+                    let alertController = UIAlertController(
+                        title: "회원가입 실패",
+                        message: "\(error.localizedDescription)",
+                        preferredStyle: .alert
+                    )
+                    let okAction = UIAlertAction(title: "OK", style: .destructive)
+                    alertController.addAction(okAction)
+                    self?.present(alertController, animated: true)
+                }
+            }
     }
 }
 
-private extension MakePasswordViewController {
+private extension MakeEmailViewController {
     func setupNavigationBar() {
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
-        navigationController?.navigationBar.tintColor = .label
     }
     func attribute() {
         view.backgroundColor = .systemBackground
         
-        passwordTextField.becomeFirstResponder()
+        emailTextField.becomeFirstResponder()
         
-        titleLabel.text = "비밀번호 만들기"
+        titleLabel.text = "이메일 만들기"
         titleLabel.font = .systemFont(ofSize: 32.0, weight: .medium)
         titleLabel.textAlignment = .center
-        descriptionLabel.text = "비밀번호를 저장할 수 있으므로 iCloud® 기기에서 로그인 정보를 입력하지 않아도 됩니다."
+        descriptionLabel.text = "새 계정에 사용할 이메일을 입력하세요. 이메일은 나중에 변경할 수 없습니다."
         descriptionLabel.font = .systemFont(ofSize: 16.0, weight: .medium)
         descriptionLabel.textColor = .secondaryLabel
         descriptionLabel.numberOfLines = 2
         descriptionLabel.textAlignment = .center
-        passwordTextField.placeholder = "비밀번호"
-        passwordTextField.font = .systemFont(ofSize: 16.0, weight: .medium)
-        passwordTextField.borderStyle = .roundedRect
-        passwordTextField.autocapitalizationType = .none
-        passwordTextField.autocorrectionType = .no
-        passwordTextField.spellCheckingType = .no
-        passwordTextField.clearButtonMode = .whileEditing
-        passwordTextField.leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 8.0, height: 0.0))
-        passwordTextField.leftViewMode = .always
-        passwordTextField.returnKeyType = .done
-        passwordTextField.isSecureTextEntry = true
-        passwordTextField.delegate = self
-        nextButton.setTitle("다음", for: .normal)
+        emailTextField.placeholder = "이메일"
+        emailTextField.font = .systemFont(ofSize: 16.0, weight: .medium)
+        emailTextField.borderStyle = .roundedRect
+        emailTextField.autocapitalizationType = .none
+        emailTextField.autocorrectionType = .no
+        emailTextField.spellCheckingType = .no
+        emailTextField.clearButtonMode = .whileEditing
+        emailTextField.leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 8.0, height: 0.0))
+        emailTextField.leftViewMode = .always
+        emailTextField.returnKeyType = .done
+        emailTextField.keyboardType = .emailAddress
+        emailTextField.delegate = self
+        
+        nextButton.setTitle("회원가입하기", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
         nextButton.titleLabel?.font = .systemFont(ofSize: 16.0, weight: .medium)
         nextButton.layer.cornerRadius = 4.0
@@ -108,7 +131,7 @@ private extension MakePasswordViewController {
         [
             titleLabel,
             descriptionLabel,
-            passwordTextField,
+            emailTextField,
             nextButton
         ].forEach { view.addSubview($0) }
         
@@ -122,17 +145,15 @@ private extension MakePasswordViewController {
             $0.top.equalTo(titleLabel.snp.bottom).offset(commonInset)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
         }
-        passwordTextField.snp.makeConstraints {
+        emailTextField.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(commonInset)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
             $0.height.equalTo(48.0)
         }
         nextButton.snp.makeConstraints {
-            $0.top.equalTo(passwordTextField.snp.bottom).offset(commonInset)
+            $0.top.equalTo(emailTextField.snp.bottom).offset(commonInset)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
             $0.height.equalTo(48.0)
         }
     }
 }
-
-
