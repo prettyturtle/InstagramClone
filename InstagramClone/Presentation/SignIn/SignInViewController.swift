@@ -20,6 +20,7 @@ class SignInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         attribute()
         layout()
     }
@@ -29,6 +30,9 @@ class SignInViewController: UIViewController {
 }
 
 private extension SignInViewController {
+    @objc func didTapLeftBarButton() {
+        dismiss(animated: true)
+    }
     @objc func didTapSignInButton() {
         print("didTapSignInButton")
     }
@@ -38,6 +42,16 @@ private extension SignInViewController {
 }
 
 private extension SignInViewController {
+    func setupNavigationBar() {
+        let leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "xmark"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapLeftBarButton)
+        )
+        leftBarButtonItem.tintColor = .label
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+    }
     func attribute() {
         view.backgroundColor = .systemBackground
         

@@ -97,6 +97,39 @@ private extension AccountViewController {
         imagePickerViewController.delegate = self
         present(imagePickerViewController, animated: true)
     }
+    @objc func didTapOptionBarButton() {
+        let alertController = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        let signUpAction = UIAlertAction(
+            title: "회원가입",
+            style: .default
+        ) { [weak self] _ in
+            let rootVC = MakeNickNameViewController()
+            let makeNickNameVC = UINavigationController(rootViewController: rootVC)
+            makeNickNameVC.modalPresentationStyle = .fullScreen
+            self?.present(makeNickNameVC, animated: true)
+        }
+        let signInAction = UIAlertAction(
+            title: "로그인",
+            style: .default
+        ) { [weak self] _ in
+            let rootVC = SignInViewController()
+            let signInVC = UINavigationController(rootViewController: rootVC)
+            signInVC.modalPresentationStyle = .fullScreen
+            self?.present(signInVC, animated: true)
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        [
+            signUpAction,
+            signInAction,
+            cancelAction
+        ].forEach { alertController.addAction($0) }
+        present(alertController, animated: true)
+    }
 }
 
 private extension AccountViewController {
@@ -270,8 +303,8 @@ private extension AccountViewController {
         let optionBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "line.3.horizontal"),
             style: .plain,
-            target: nil,
-            action: nil
+            target: self,
+            action: #selector(didTapOptionBarButton)
         )
         
         navigationItem.rightBarButtonItems = [optionBarButtonItem, plusBarButtonItem]
