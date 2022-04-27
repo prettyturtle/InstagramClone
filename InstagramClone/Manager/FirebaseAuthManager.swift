@@ -47,4 +47,16 @@ struct FirebaseAuthManager {
                 }
             }
     }
+    func getCurrentUser() {
+        guard let currentUserID = auth.currentUser?.uid else { return }
+        
+        firebaseDBManager.readUser(id: currentUserID) { result in
+            switch result {
+            case .success(let user):
+                print(user)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 }

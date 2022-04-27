@@ -67,7 +67,12 @@ private extension MakeEmailViewController {
                         message: nil,
                         preferredStyle: .alert
                     )
-                    let okAction = UIAlertAction(title: "OK", style: .default)
+                    let okAction = UIAlertAction(
+                        title: "OK",
+                        style: .default
+                    ) { [weak self] _ in
+                        self?.dismiss(animated: true)
+                    }
                     alertController.addAction(okAction)
                     self?.present(alertController, animated: true)
                 case .failure(let error):

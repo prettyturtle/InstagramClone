@@ -274,5 +274,30 @@ struct FirebaseDBManager {
                 }
             }
     }
+    
+    func readUser(
+        id: String,
+        completionHandler: @escaping (Result<User, Error>) -> Void
+    ) {
+        db.collection(CollectionType.user.name)
+            .document(id)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    completionHandler(.failure(error))
+                    return
+                }
+                if let snapshot = snapshot,
+                   let dataDict = snapshot.data() {
+                    
+                    do {
+                        let data = try JSONSerialization.data(withJSONObject: dataDict)
+                        let user = try JSONDecoder().decode(User.self, from: data)
+                        completionHandler(.success(user))
+                    } catch {
+                        completionHandler(.failure(error))
+                    }
+                }
+            }
+    }
 }
 

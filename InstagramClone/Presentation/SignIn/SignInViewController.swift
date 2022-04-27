@@ -38,6 +38,10 @@ private extension SignInViewController {
     }
     @objc func didTapMoveToSignUpButton() {
         print("didTapMoveToSignUpButton")
+        let rootVC = MakeNickNameViewController()
+        let signUpVC = UINavigationController(rootViewController: rootVC)
+        signUpVC.modalPresentationStyle = .fullScreen
+        self.present(signUpVC, animated: true)
     }
 }
 
