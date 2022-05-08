@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Toast
 
 class SignInViewController: UIViewController {
     
@@ -17,6 +18,8 @@ class SignInViewController: UIViewController {
     private let signUpLabel = UILabel()
     private let moveToSignUpButton = UIButton()
     private let signUpStackView = UIStackView()
+    
+    private let firebaseAuthManager = FirebaseAuthManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +38,17 @@ private extension SignInViewController {
     }
     @objc func didTapSignInButton() {
         print("didTapSignInButton")
+        firebaseAuthManager.signIn(
+            email: idTextField.text!,
+            password: pwTextField.text!) { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.dismiss(animated: true)
+                case .failure(let error):
+                    self?.view.makeToast("\(error.localizedDescription)")
+                    print(error.localizedDescription)
+                }
+            }
     }
     @objc func didTapMoveToSignUpButton() {
         print("didTapMoveToSignUpButton")

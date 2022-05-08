@@ -37,11 +37,17 @@ class AccountViewController: UIViewController {
     
     private var profileImage: UIImage?
     
+    private let firebaseAuthManager = FirebaseAuthManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
         attribute()
         layout()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        FirebaseAuthManager().getCurrentUser() // 로그인 확인용
     }
 }
 extension AccountViewController: UICollectionViewDelegateFlowLayout {
@@ -121,11 +127,26 @@ private extension AccountViewController {
             signInVC.modalPresentationStyle = .fullScreen
             self?.present(signInVC, animated: true)
         }
+        let signOutAction = UIAlertAction( // 로그인 확인용 로그아웃 기능
+            title: "로그아웃",
+            style: .destructive
+        ) { [weak self] _ in
+            self?.firebaseAuthManager.signOut(completionHandler: { result in
+                switch result {
+                case .success(_):
+                    print("로그아웃 성공")
+                case .failure(let error):
+                    print("로그아웃 실패: \(error.localizedDescription)")
+                }
+            })
+        }
+        
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         
         [
             signUpAction,
             signInAction,
+            signOutAction,
             cancelAction
         ].forEach { alertController.addAction($0) }
         present(alertController, animated: true)

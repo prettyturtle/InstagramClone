@@ -59,4 +59,26 @@ struct FirebaseAuthManager {
             }
         }
     }
+    func signIn(
+        email: String,
+        password: String,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        auth.signIn(withEmail: email, password: password) { result, error in
+            if let error = error {
+                completionHandler(.failure(error))
+                return
+            } else {
+                completionHandler(.success(()))
+            }
+        }
+    }
+    func signOut(completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        do {
+            try auth.signOut()
+            completionHandler(.success(()))
+        } catch {
+            completionHandler(.failure(error))
+        }
+    }
 }
