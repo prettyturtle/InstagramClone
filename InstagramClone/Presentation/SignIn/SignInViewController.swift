@@ -44,6 +44,10 @@ private extension SignInViewController {
                 switch result {
                 case .success(_):
                     self?.dismiss(animated: true)
+                    // 로그인 성공시 메인 화면으로 이동
+                    let rootViewController = TabBarController()
+                    rootViewController.modalPresentationStyle = .fullScreen
+                    self?.present(rootViewController, animated: true)
                 case .failure(let error):
                     self?.view.makeToast("\(error.localizedDescription)")
                     print(error.localizedDescription)
