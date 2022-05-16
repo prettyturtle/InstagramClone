@@ -135,6 +135,9 @@ private extension AccountViewController {
                 switch result {
                 case .success(_):
                     print("로그아웃 성공")
+                    let signInVC = SignInViewController()
+                    signInVC.modalPresentationStyle = .fullScreen
+                    self?.present(signInVC, animated: true)
                 case .failure(let error):
                     print("로그아웃 실패: \(error.localizedDescription)")
                 }
