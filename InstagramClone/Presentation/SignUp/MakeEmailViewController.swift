@@ -71,7 +71,9 @@ private extension MakeEmailViewController {
                         title: "OK",
                         style: .default
                     ) { [weak self] _ in
-                        self?.dismiss(animated: true)
+                        let mainVC = TabBarController()
+                        mainVC.modalPresentationStyle = .fullScreen
+                        self?.present(mainVC, animated: true)
                     }
                     alertController.addAction(okAction)
                     self?.present(alertController, animated: true)
