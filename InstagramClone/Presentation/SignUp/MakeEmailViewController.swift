@@ -15,11 +15,13 @@ class MakeEmailViewController: UIViewController {
     private let emailTextField = UITextField()
     private let nextButton = UIButton()
     
+    let name: String
     let password: String
     let nickName: String
     private let firebaseAuthManager = FirebaseAuthManager()
     
-    init(nickName: String, password: String) {
+    init(name: String, nickName: String, password: String) {
+        self.name = name
         self.nickName = nickName
         self.password = password
         super.init(nibName: nil, bundle: nil)
@@ -59,6 +61,7 @@ private extension MakeEmailViewController {
         firebaseAuthManager.signUp(
             email: emailTextField.text!,
             password: password,
+            name: name,
             nickName: nickName) { [weak self] result in
                 switch result {
                 case .success(_):

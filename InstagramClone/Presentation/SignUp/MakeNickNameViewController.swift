@@ -15,6 +15,16 @@ class MakeNickNameViewController: UIViewController {
     private let nickNameTextField = UITextField()
     private let nextButton = UIButton()
     
+    let name: String
+    
+    init(name: String) {
+        self.name = name
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
@@ -44,6 +54,7 @@ private extension MakeNickNameViewController {
     @objc func didTapNextButton() {
         print("didTapNextButton")
         let makePasswordViewController = MakePasswordViewController(
+            name: name,
             nickName: nickNameTextField.text!
         )
         navigationController?.pushViewController(makePasswordViewController, animated: true)
@@ -52,29 +63,23 @@ private extension MakeNickNameViewController {
 
 private extension MakeNickNameViewController {
     func setupNavigationBar() {
-        let leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "xmark"),
-            style: .plain,
-            target: self,
-            action: #selector(didTapLeftBarButton)
-        )
-        leftBarButtonItem.tintColor = .label
-        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationController?.navigationBar.topItem?.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .label
     }
     func attribute() {
         view.backgroundColor = .systemBackground
         
         nickNameTextField.becomeFirstResponder()
         
-        titleLabel.text = "사용자 이름 만들기"
+        titleLabel.text = "사용자 닉네임 만들기"
         titleLabel.font = .systemFont(ofSize: 32.0, weight: .medium)
         titleLabel.textAlignment = .center
-        descriptionLabel.text = "새 계정에 사용할 사용자 이름을 선택하세요. 나중에 언제든지 변경할 수 있습니다."
+        descriptionLabel.text = "새 계정에 사용할 사용자 닉네임을 선택하세요. 나중에 언제든지 변경할 수 있습니다."
         descriptionLabel.font = .systemFont(ofSize: 16.0, weight: .medium)
         descriptionLabel.textColor = .secondaryLabel
         descriptionLabel.numberOfLines = 2
         descriptionLabel.textAlignment = .center
-        nickNameTextField.placeholder = "사용자 이름"
+        nickNameTextField.placeholder = "사용자 닉네임"
         nickNameTextField.font = .systemFont(ofSize: 16.0, weight: .medium)
         nickNameTextField.borderStyle = .roundedRect
         nickNameTextField.autocapitalizationType = .none

@@ -15,6 +15,7 @@ struct FirebaseAuthManager {
     func signUp(
         email: String,
         password: String,
+        name: String,
         nickName: String,
         completionHandler: @escaping (Result<Void, Error>) -> Void
     ) {
@@ -28,9 +29,9 @@ struct FirebaseAuthManager {
                 if let result = result {
                     let newUser = User(
                         id: result.user.uid,
-                        name: nil,
+                        name: name,
                         nickName: nickName,
-                        profileImageURLString: nil,
+                        profileImageURLString: "",
                         feed: [],
                         follower: [],
                         following: [],

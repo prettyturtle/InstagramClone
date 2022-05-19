@@ -113,7 +113,7 @@ private extension AccountViewController {
             title: "회원가입",
             style: .default
         ) { [weak self] _ in
-            let rootVC = MakeNickNameViewController()
+            let rootVC = MakeNameViewController()
             let makeNickNameVC = UINavigationController(rootViewController: rootVC)
             makeNickNameVC.modalPresentationStyle = .fullScreen
             self?.present(makeNickNameVC, animated: true)
