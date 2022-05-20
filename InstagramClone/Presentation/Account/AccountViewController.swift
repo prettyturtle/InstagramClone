@@ -48,6 +48,7 @@ class AccountViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         FirebaseAuthManager().getCurrentUser() // 로그인 확인용
+        fetchUser()
     }
 }
 extension AccountViewController: UICollectionViewDelegateFlowLayout {
@@ -91,6 +92,27 @@ extension AccountViewController: PHPickerViewControllerDelegate {
             }
         }
         dismiss(animated: true)
+    }
+}
+
+private extension AccountViewController {
+    func fetchUser() {
+        firebaseAuthManager.getCurrentUser { [weak self] user in
+            guard let self = self else { return }
+            self.userNameLabel.text = user.name
+            self.postCountLabel.text = "\(user.feed.count)"
+            self.followerCountLabel.text = "\(user.follower.count)"
+            self.followingCountLabel.text = "\(user.following.count)"
+            self.updateNavigationTitle(nickName: user.nickName)
+        }
+    }
+    func updateNavigationTitle(nickName: String) {
+        let leftBarButtonCustomView = UILabel()
+        leftBarButtonCustomView.text = nickName
+        leftBarButtonCustomView.font = .systemFont(ofSize: 24.0, weight: .bold)
+        leftBarButtonCustomView.textColor = .label
+        let leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonCustomView)
+        navigationItem.leftBarButtonItem = leftBarButtonItem
     }
 }
 
@@ -159,10 +181,6 @@ private extension AccountViewController {
 private extension AccountViewController {
     func attribute() {
         view.backgroundColor = .systemBackground
-        userNameLabel.text = "이영찬"
-        postCountLabel.text = "0"
-        followerCountLabel.text = "182"
-        followingCountLabel.text = "345"
         
         profileImageView.backgroundColor = .secondarySystemBackground
         profileImageView.layer.cornerRadius = 40.0
@@ -311,13 +329,6 @@ private extension AccountViewController {
         }
     }
     func setupNavigationBar() {
-        let leftBarButtonCustomView = UILabel()
-        leftBarButtonCustomView.text = "20._.chan"
-        leftBarButtonCustomView.font = .systemFont(ofSize: 24.0, weight: .bold)
-        leftBarButtonCustomView.textColor = .label
-        let leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonCustomView)
-        navigationItem.leftBarButtonItem = leftBarButtonItem
-        
         let plusBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "plus.app"),
             style: .plain,

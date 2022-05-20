@@ -64,6 +64,18 @@ struct FirebaseAuthManager {
             }
         }
     }
+    func getCurrentUser(completionHandler: @escaping (User) -> Void) {
+        guard let currentUserID = auth.currentUser?.uid else { return }
+        firebaseDBManager.readUser(id: currentUserID) { result in
+            switch result {
+            case .success(let user):
+                print(user)
+                completionHandler(user)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
     func signIn(
         email: String,
         password: String,
