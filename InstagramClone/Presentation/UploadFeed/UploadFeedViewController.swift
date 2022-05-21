@@ -13,6 +13,7 @@ import Toast
 class UploadFeedViewController: UIViewController {
     
     private let firebaseDBManager = FirebaseDBManager()
+    private let firebaseAuthManager = FirebaseAuthManager()
     
     private let imagePickerView = UIImageView()
     private let imagePickerButton = UIButton()
@@ -109,31 +110,34 @@ extension UploadFeedViewController {
         navigationItem.leftBarButtonItem?.isEnabled = false
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        let uploadFeed = UploadFeed(
-            user: [User.mockUser, User.mockUser2, User.mockUser3].randomElement()!,
-            location: "인하대역 스타벅스",
-            images: selectedImages,
-            description: descriptionTextView.textColor == .secondaryLabel ? "" : descriptionTextView.text ?? ""
-        )
-        
-        firebaseDBManager.createFeed(
-            uploadFeed: uploadFeed) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success():
-                    self.activityIndicatorView.stopAnimating()
-                    self.dismiss(animated: true)
-                    self.delegate?.didEndUploadFeed()
-                case .failure(let error):
-                    print("ERROR: UploadFeedViewController - didTapRightBarButton - createFeed - \(error.localizedDescription)")
-                    self.activityIndicatorView.stopAnimating()
-                    self.view.makeToast("ERROR!!")
-                    
-                    self.view.isUserInteractionEnabled = true
-                    self.navigationItem.leftBarButtonItem?.isEnabled = true
-                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+        firebaseAuthManager.getCurrentUser { [weak self] user in
+            guard let self = self else { return }
+            let uploadFeed = UploadFeed(
+                user: user,
+                location: "인하대역 스타벅스",
+                images: self.selectedImages,
+                description: self.descriptionTextView.textColor == .secondaryLabel ? "" : self.descriptionTextView.text ?? ""
+            )
+            
+            self.firebaseDBManager.createFeed(
+                uploadFeed: uploadFeed) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success():
+                        self.activityIndicatorView.stopAnimating()
+                        self.dismiss(animated: true)
+                        self.delegate?.didEndUploadFeed()
+                    case .failure(let error):
+                        print("ERROR: UploadFeedViewController - didTapRightBarButton - createFeed - \(error.localizedDescription)")
+                        self.activityIndicatorView.stopAnimating()
+                        self.view.makeToast("ERROR!!")
+                        
+                        self.view.isUserInteractionEnabled = true
+                        self.navigationItem.leftBarButtonItem?.isEnabled = true
+                        self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    }
                 }
-            }
+        }
     }
     @objc func didTapImagePickerButton() {
         var config = PHPickerConfiguration()
