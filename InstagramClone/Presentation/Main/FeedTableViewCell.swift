@@ -36,6 +36,8 @@ class FeedTableViewCell: UITableViewCell {
     
     weak var delegate: FeedTableViewCellDelegate?
     
+    private let firebaseAuthManager = FirebaseAuthManager()
+    
     func setupView(feed: Feed) {
         attribute()
         layout()
@@ -112,20 +114,23 @@ private extension FeedTableViewCell {
         let shareAction = UIAlertAction(title: "공유", style: .default)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         
-        if feed.user == User.mockUser2 {
-            [
-                modifyAction,
-                deleteAction,
-                cancelAction
-            ].forEach { alertController.addAction($0) }
-        } else {
-            [
-                shareAction,
-                cancelAction
-            ].forEach { alertController.addAction($0) }
+        firebaseAuthManager.getCurrentUser { [weak self] user in
+            guard let self = self else { return }
+            if feed.user == user {
+                [
+                    modifyAction,
+                    deleteAction,
+                    cancelAction
+                ].forEach { alertController.addAction($0) }
+            } else {
+                [
+                    shareAction,
+                    cancelAction
+                ].forEach { alertController.addAction($0) }
+            }
+            
+            self.delegate?.showAlert(alertController)
         }
-        
-        delegate?.showAlert(alertController)
     }
 }
 
