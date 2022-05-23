@@ -140,16 +140,7 @@ private extension AccountViewController {
             makeNickNameVC.modalPresentationStyle = .fullScreen
             self?.present(makeNickNameVC, animated: true)
         }
-        let signInAction = UIAlertAction(
-            title: "로그인",
-            style: .default
-        ) { [weak self] _ in
-            let rootVC = SignInViewController()
-            let signInVC = UINavigationController(rootViewController: rootVC)
-            signInVC.modalPresentationStyle = .fullScreen
-            self?.present(signInVC, animated: true)
-        }
-        let signOutAction = UIAlertAction( // 로그인 확인용 로그아웃 기능
+        let signOutAction = UIAlertAction(
             title: "로그아웃",
             style: .destructive
         ) { [weak self] _ in
@@ -170,7 +161,6 @@ private extension AccountViewController {
         
         [
             signUpAction,
-            signInAction,
             signOutAction,
             cancelAction
         ].forEach { alertController.addAction($0) }

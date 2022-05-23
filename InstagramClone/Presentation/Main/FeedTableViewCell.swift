@@ -323,6 +323,5 @@ private extension FeedTableViewCell {
             $0.leading.trailing.equalToSuperview().inset(commonInset)
             $0.bottom.equalToSuperview().inset(commonInset)
         }
-        
     }
 }
