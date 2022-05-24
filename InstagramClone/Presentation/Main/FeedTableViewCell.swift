@@ -88,9 +88,11 @@ extension FeedTableViewCell: UICollectionViewDataSource {
 private extension FeedTableViewCell {
     @objc func didDoubleTapFeedImageView() {
         print("didDoubleTapFeedImageView!!")
+        didLikeFeed()
     }
     @objc func didTapLikeButton() {
         print("didTapLikeButton")
+        didLikeFeed()
     }
     @objc func didTapMeatBallMenuButton() {
         guard let feed = feed else { return }
@@ -135,6 +137,18 @@ private extension FeedTableViewCell {
 }
 
 private extension FeedTableViewCell {
+    func didLikeFeed() {
+        guard let feed = feed else { return }
+        firebaseAuthManager.likeFeed(feedID: feed.id) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(()):
+                self.likeButton.setImage(systemName: "heart.fill")
+            case .failure(let error):
+                print("ERROR: FeedTableViewCell - didLikeFeed - \(error.localizedDescription)")
+            }
+        }
+    }
     func setImages(urls: [URL?], completionHandler: @escaping ([UIImage?]) -> Void) {
         let urls = urls.compactMap { $0 }
         DispatchQueue.global(qos: .background).async {

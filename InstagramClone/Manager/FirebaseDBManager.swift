@@ -299,5 +299,44 @@ struct FirebaseDBManager {
                 }
             }
     }
+    
+    func updateUserLike(
+        userID: String,
+        feedID: String,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        db.collection(CollectionType.user.name)
+            .document(userID)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    completionHandler(.failure(error))
+                    return
+                }
+                if let snapshot = snapshot {
+                    guard let data = snapshot.data(),
+                          let currentLike = data["like"] as? [String] else { return }
+                    
+                    var updateLike = currentLike
+                    
+                    if !currentLike.contains(feedID) {
+                        updateLike = currentLike + [feedID]
+                    }
+                    
+                    db.collection(CollectionType.user.name)
+                        .document(userID)
+                        .updateData(
+                            [
+                                "like": updateLike
+                            ] as [String: Any]) { error in
+                                if let error = error {
+                                    print("ERROR: FirebaseDBManager - updateUserLike - updateData - \(error.localizedDescription)")
+                                    completionHandler(.failure(error))
+                                } else {
+                                    completionHandler(.success(()))
+                                }
+                            }
+                }
+            }
+    }
 }
 
