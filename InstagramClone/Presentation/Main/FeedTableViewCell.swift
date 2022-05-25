@@ -51,6 +51,13 @@ class FeedTableViewCell: UITableViewCell {
         descriptionLabel.text = "\(feed.user.nickName) \(feed.description)"
         dateLabel.text = feed.date
         
+        firebaseAuthManager.getCurrentUser { [weak self] user in
+            guard let self = self else { return }
+            if user.like.contains(feed.id) {
+                self.likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            }
+        }
+        
         setImage(url: feed.user.profileImageURL) { [weak self] image in
             guard let self = self else { return }
             self.userImageView.image = image

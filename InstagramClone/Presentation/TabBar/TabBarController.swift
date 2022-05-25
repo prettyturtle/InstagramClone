@@ -12,6 +12,7 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         view.tintColor = .label
+        tabBar.backgroundColor = .systemBackground
         
         let tabBarItems: [UIViewController] = TabBar.allCases.map {
             let viewController = $0.viewController
