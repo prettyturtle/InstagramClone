@@ -338,5 +338,54 @@ struct FirebaseDBManager {
                 }
             }
     }
+    
+    func uploadUserProfileImage(
+        image: UIImage?,
+        completionHandler: @escaping (Result<String, Error>) -> Void
+    ) {
+        let storageRef = storage.reference()
+        let metaData = StorageMetadata()
+        metaData.contentType = "image/png"
+        let filePath = "profile_images/\(UUID().uuidString)"
+        let storageChild = storageRef.child(filePath)
+        
+        guard let imageData = image?.pngData() else { return }
+        
+        storageChild.putData(imageData, metadata: metaData) { _, error in
+            if let error = error {
+                print("ERROR: FirebaseDBManager - uploadUserProfileImage - \(error.localizedDescription)")
+                completionHandler(.failure(error))
+                return
+            } else {
+                print("FirebaseDBManager - uploadUserProfileImage - 사진 업로드 성공!!")
+                
+                storageChild.downloadURL { url, error in
+                    if let url = url?.absoluteString {
+                        completionHandler(.success(url))
+                        return
+                    }
+                    if let error = error {
+                        print("ERROR: FirebaseDBManager - uploadImage - downloadURL - \(error.localizedDescription)")
+                        completionHandler(.failure(error))
+                        return
+                    }
+                }
+            }
+        }
+    }
+    
+    func updateUserProfileImage(user: User, url: String, completionHandler: @escaping (Result<Void, Error>) -> Void) {
+        db.collection(CollectionType.user.name)
+            .document(user.id)
+            .updateData(["profileImageURLString": url]) { error in
+                if let error = error {
+                    completionHandler(.failure(error))
+                    return
+                } else {
+                    completionHandler(.success(()))
+                    return
+                }
+            }
+    }
 }
 

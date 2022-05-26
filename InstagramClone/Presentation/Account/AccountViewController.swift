@@ -8,6 +8,7 @@
 import UIKit
 import PhotosUI
 import SnapKit
+import Toast
 
 class AccountViewController: UIViewController {
     
@@ -37,6 +38,7 @@ class AccountViewController: UIViewController {
     
     private var profileImage: UIImage?
     
+    private let firebaseDBManager = FirebaseDBManager()
     private let firebaseAuthManager = FirebaseAuthManager()
     
     override func viewDidLoad() {
@@ -81,6 +83,23 @@ extension AccountViewController: PHPickerViewControllerDelegate {
                     guard let self = self else { return }
                     if let image = image as? UIImage {
                         DispatchQueue.main.async {
+                            self.firebaseAuthManager.getCurrentUser { user in
+                                self.firebaseDBManager.uploadUserProfileImage(image: image) { result in
+                                    switch result {
+                                    case .success(let url):
+                                        self.firebaseDBManager.updateUserProfileImage(user: user, url: url) { result in
+                                            switch result {
+                                            case .success(_):
+                                                self.view.makeToast("프로필 사진 업로드 성공!")
+                                            case .failure(_):
+                                                self.view.makeToast("프로필 사진 업로드 실패")
+                                            }
+                                        }
+                                    case .failure(let error):
+                                        print("ERROR: AccountViewController - PHPickerViewControllerDelegate - \(error.localizedDescription)")
+                                    }
+                                }
+                            }
                             self.profileImageView.image = image
                             self.profileImage = image
                         }
@@ -104,6 +123,10 @@ private extension AccountViewController {
             self.followerCountLabel.text = "\(user.follower.count)"
             self.followingCountLabel.text = "\(user.following.count)"
             self.updateNavigationTitle(nickName: user.nickName)
+            guard let url = URL(string: user.profileImageURLString ?? ""),
+                  let data = try? Data(contentsOf: url) else { return }
+            let image = UIImage(data: data)
+            self.profileImageView.image = image
         }
     }
     func updateNavigationTitle(nickName: String) {
