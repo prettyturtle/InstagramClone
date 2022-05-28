@@ -115,4 +115,21 @@ struct FirebaseAuthManager {
             }
         }
     }
+    
+    func unlikeFeed(
+        feedID: String,
+        completionHandler: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let userID = auth.currentUser?.uid else { return }
+        firebaseDBManager.updateUserUnlike(userID: userID, feedID: feedID) { result in
+            switch result {
+            case .success(_):
+                completionHandler(.success(()))
+                return
+            case .failure(let error):
+                completionHandler(.failure(error))
+                return
+            }
+        }
+    }
 }
