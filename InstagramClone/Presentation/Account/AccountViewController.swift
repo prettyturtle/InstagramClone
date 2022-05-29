@@ -36,6 +36,8 @@ class AccountViewController: UIViewController {
     private let collectionViewLayout = UICollectionViewFlowLayout()
     private lazy var myFeedCollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     
+    private let refreshControl = UIRefreshControl()
+    
     private var profileImage: UIImage?
     
     private let firebaseDBManager = FirebaseDBManager()
@@ -111,6 +113,13 @@ extension AccountViewController: PHPickerViewControllerDelegate {
             }
         }
         dismiss(animated: true)
+    }
+}
+
+private extension AccountViewController {
+    @objc func beginRefresh() {
+        print("beginRefresh!")
+        refreshControl.endRefreshing()
     }
 }
 
@@ -265,7 +274,16 @@ private extension AccountViewController {
         separatorView.backgroundColor = .separator
         myFeedCollectionView.dataSource = self
         myFeedCollectionView.delegate = self
-        myFeedCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyFeedCollectionViewCell")
+        myFeedCollectionView.register(
+            UICollectionViewCell.self,
+            forCellWithReuseIdentifier: "MyFeedCollectionViewCell"
+        )
+        myFeedCollectionView.refreshControl = refreshControl
+        refreshControl.addTarget(
+            self,
+            action: #selector(beginRefresh),
+            for: .valueChanged
+        )
     }
     func layout() {
         let commonInset: CGFloat = 16.0
