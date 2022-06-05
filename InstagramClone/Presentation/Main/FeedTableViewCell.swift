@@ -38,6 +38,10 @@ class FeedTableViewCell: UITableViewCell {
     
     private let firebaseAuthManager = FirebaseAuthManager()
     
+    override func prepareForReuse() {
+        userImageView.image = nil
+    }
+    
     func setupView(feed: Feed) {
         attribute()
         layout()

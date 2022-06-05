@@ -13,6 +13,10 @@ class FeedImageCollectionViewCell: UICollectionViewCell {
     
     private let feedImageView = UIImageView()
     
+    override func prepareForReuse() {
+        feedImageView.image = nil
+    }
+    
     func setupView(image: UIImage?) {
         attribute()
         layout()
